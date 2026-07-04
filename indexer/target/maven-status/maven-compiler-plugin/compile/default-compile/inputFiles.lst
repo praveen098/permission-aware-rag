@@ -1,0 +1,8 @@
+/Users/don/Desktop/PermissionAgent/indexer/src/main/java/io/parag/indexer/IndexerApplication.java
+/Users/don/Desktop/PermissionAgent/indexer/src/main/java/io/parag/indexer/chunk/Chunker.java
+/Users/don/Desktop/PermissionAgent/indexer/src/main/java/io/parag/indexer/embed/EmbeddingClient.java
+/Users/don/Desktop/PermissionAgent/indexer/target/generated-sources/avro/io/parag/events/AclPayload.java
+/Users/don/Desktop/PermissionAgent/indexer/target/generated-sources/avro/io/parag/events/DocEvent.java
+/Users/don/Desktop/PermissionAgent/indexer/target/generated-sources/avro/io/parag/events/DocEventType.java
+/Users/don/Desktop/PermissionAgent/indexer/target/generated-sources/avro/io/parag/events/DocPayload.java
+/Users/don/Desktop/PermissionAgent/indexer/target/generated-sources/avro/io/parag/events/SourceType.java
