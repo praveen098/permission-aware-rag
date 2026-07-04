@@ -18,7 +18,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-      CLUSTER_ID: "MkU3OEVBNzA3MTRCNEJCQg"
+      CLUSTER_ID: "parag-local-cluster-0001"
     healthcheck:
       test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "kafka:29092"]
       interval: 10s
@@ -62,7 +62,12 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-    command: bash -c "kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic doc-events --partitions 3 --replication-factor 1 && echo 'Topic doc-events ready.'"
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      "kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists \
+        --topic doc-events --partitions 3 --replication-factor 1 \
+        --config cleanup.policy=delete --config retention.ms=604800000
+      echo 'Topic doc-events ready.'"
 
 volumes:
   pgdata:
