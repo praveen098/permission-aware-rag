@@ -8,3 +8,5 @@ venv/
 pgdata/
 .model_cache/
 .DS_Store
+target/
+venv/
