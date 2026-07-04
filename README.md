@@ -66,17 +66,3 @@ src/app/              config, indexer, retrieval, api (built day by day)
 scripts/              corpus generator, producers, utilities
 docs/notes/           daily design notes and decision rationale
 ```
-
-## Status
-
-Built over a 10-day sprint. Day-by-day log in `docs/notes/`.
-
-- [x] Day 1 — architecture, infra, DB schema, event contract
-- [x] Day 2 — Spring indexer scaffold, chunker, embedding service, corpus generator
-- [ ] Day 3 — end-to-end ingestion: consume → chunk → embed → write chunks
-- [ ] Day 4–5 — Kafka indexer consumer (upsert / delete / ACL propagation)
-- [ ] Day 6 — permission-filtered hybrid retrieval
-- [ ] Day 7 — generation with citations + refusal handling
-- [ ] Day 8 — eval harness: quality, leak-rate, latency, cost
-- [ ] Day 9 — hardening, docs
-- [ ] Day 10 — demo
