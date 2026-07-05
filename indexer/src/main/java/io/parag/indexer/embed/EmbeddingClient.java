@@ -30,6 +30,7 @@ import java.util.List;
 public class EmbeddingClient {
 
     private final HttpClient http = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_1_1)
             .connectTimeout(Duration.ofSeconds(5))
             .build();
     private final ObjectMapper mapper = new ObjectMapper();
