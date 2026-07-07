@@ -74,8 +74,8 @@ Built over a 10-day sprint. Day-by-day log in `docs/notes/`.
 - [x] Day 1 — architecture, infra, DB schema, event contract
 - [x] Day 2 — Spring indexer scaffold, chunker, embedding service, corpus generator
 - [x] Day 3 — end-to-end ingestion: consume → chunk → embed → write chunks
-- [ ] Day 4–5 — Kafka indexer consumer (upsert / delete / ACL propagation)
-- [ ] Day 4–5 — Kafka indexer consumer (upsert / delete / ACL propagation)
+- [x] Day 4 — live permissions: DOC_UPDATED, DOC_DELETED, ACL_CHANGED revocation
+- [ ] Day 5 — hardening + revocation integration test
 - [ ] Day 6 — permission-filtered hybrid retrieval
 - [ ] Day 7 — generation with citations + refusal handling
 - [ ] Day 8 — eval harness: quality, leak-rate, latency, cost

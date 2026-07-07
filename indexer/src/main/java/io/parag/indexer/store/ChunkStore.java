@@ -76,10 +76,36 @@ public class ChunkStore {
         }
     }
 
-    /** For DOC_DELETED (Day 4). Removes all chunks for a document. */
+    /** For DOC_DELETED. Removes all chunks for a document. */
     @Transactional
     public void deleteDocument(String documentId) {
         jdbc.update("DELETE FROM chunks WHERE document_id = ?", documentId);
+    }
+
+    /**
+     * ACL_CHANGED: update the permission array on every chunk of a document
+     * WITHOUT touching the embeddings.
+     *
+     * This is the whole point of the denormalized allowed_groups design (Day 1
+     * D3). A permission change - e.g. removing 'leadership' so {3,4} becomes {3}
+     * - is a single metadata UPDATE. No re-chunking, no re-embedding, no calls to
+     * the embedding service. Revocation propagates in one cheap statement, and
+     * takes effect on the very next query because retrieval filters on this array.
+     *
+     * Returns the number of chunks updated (0 means the document isn't indexed
+     * yet - see the consumer for how that's handled).
+     */
+    @Transactional
+    public int updateAllowedGroups(String documentId, List<Integer> allowedGroups) {
+        Integer[] groupsBoxed = allowedGroups.toArray(new Integer[0]);
+        return jdbc.update(connection -> {
+            Array groupsArray = connection.createArrayOf("int", groupsBoxed);
+            var ps = connection.prepareStatement(
+                    "UPDATE chunks SET allowed_groups = ? WHERE document_id = ?");
+            ps.setArray(1, groupsArray);
+            ps.setString(2, documentId);
+            return ps;
+        });
     }
 
     /** Current stored version for a document, or -1 if absent. Used for idempotency. */

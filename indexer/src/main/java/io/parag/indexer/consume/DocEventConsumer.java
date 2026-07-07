@@ -14,17 +14,17 @@ import org.springframework.stereotype.Component;
  * DURABILITY / IDEMPOTENCY (Day 1 D4, Day 2 D2, Day 3 D2/D3):
  *  - Manual ack (application.yml: enable-auto-commit=false,
  *    ack-mode=manual_immediate). We call ack.acknowledge() ONLY after processing
- *    succeeds. If anything throws (embedding service down, DB error), we don't
- *    ack, the transaction rolls back, and Kafka redelivers - nothing is lost.
- *  - Version gate: if the event's doc_version <= what's stored, skip. Makes
- *    redelivery of an already-processed event a no-op.
+ *    succeeds. If anything throws, we don't ack, the transaction rolls back, and
+ *    Kafka redelivers - nothing is lost.
+ *  - Version gate on content events: if doc_version <= what's stored, skip.
  *
- * The transactional work lives in DocumentIndexer (a separate bean) so Spring's
- * @Transactional proxy actually applies - calling a @Transactional method on
- * `this` would silently bypass it.
+ * All four event types are now handled:
+ *  - DOC_CREATED / DOC_UPDATED -> DocumentIndexer.upsert (chunk, embed, store)
+ *  - DOC_DELETED               -> DocumentMutator.delete
+ *  - ACL_CHANGED               -> DocumentMutator.changeAcl (no re-embedding)
  *
- * Day 3 implements DOC_CREATED end-to-end. DOC_UPDATED shares the same upsert
- * path. DOC_DELETED / ACL_CHANGED are stubbed - that's your Day 4 build.
+ * Transactional work lives in DocumentIndexer / DocumentMutator (separate beans)
+ * so Spring's @Transactional proxy applies.
  */
 @Component
 public class DocEventConsumer {
@@ -32,10 +32,12 @@ public class DocEventConsumer {
     private static final Logger log = LoggerFactory.getLogger(DocEventConsumer.class);
 
     private final DocumentIndexer indexer;
+    private final DocumentMutator mutator;
     private final ChunkStore chunkStore;
 
-    public DocEventConsumer(DocumentIndexer indexer, ChunkStore chunkStore) {
+    public DocEventConsumer(DocumentIndexer indexer, DocumentMutator mutator, ChunkStore chunkStore) {
         this.indexer = indexer;
+        this.mutator = mutator;
         this.chunkStore = chunkStore;
     }
 
@@ -56,16 +58,16 @@ public class DocEventConsumer {
                         indexer.upsert(event);
                     }
                 }
-                case "DOC_DELETED" ->
-                    log.warn("DOC_DELETED not yet implemented (Day 4)");
-                case "ACL_CHANGED" ->
-                    log.warn("ACL_CHANGED not yet implemented (Day 4)");
+                case "DOC_DELETED" -> mutator.delete(event);
+                case "ACL_CHANGED" -> mutator.changeAcl(event);
                 default -> log.warn("unknown event type: {}", type);
             }
 
+            // Commit the Kafka offset ONLY after successful processing.
             ack.acknowledge();
 
         } catch (Exception e) {
+            // Do NOT ack: event stays uncommitted, Kafka redelivers it.
             log.error("failed to process {} v{}; will be redelivered: {}",
                     documentId, version, e.getMessage(), e);
             throw e;
