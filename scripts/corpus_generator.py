@@ -152,21 +152,42 @@ def main() -> None:
 
     producer = Producer({"bootstrap.servers": BOOTSTRAP})
 
-    published = 0
+    # Track delivery *outcomes*, not just enqueue. This closes the fire-and-forget
+    # bug where produce() succeeded but the topic was missing / broker rejected
+    # and we still printed "published N documents". "Published" now means the
+    # broker acked the write.
+    delivered = 0
+    failed: list[str] = []
+
+    def on_delivery(err, msg):
+        nonlocal delivered
+        if err is not None:
+            failed.append(f"{msg.key().decode() if msg.key() else '?'}: {err}")
+        else:
+            delivered += 1
+
+    queued = 0
     for doc in CORPUS:
         event = make_event(doc)
-        # Key = document_id => per-document ordering within a partition.
         key = key_serializer(event["document_id"])
         value = avro_serializer(
             event, SerializationContext(TOPIC, MessageField.VALUE)
         )
-        producer.produce(topic=TOPIC, key=key, value=value)
-        published += 1
-        print(f"published DOC_CREATED {event['document_id']} "
+        producer.produce(topic=TOPIC, key=key, value=value, on_delivery=on_delivery)
+        queued += 1
+        print(f"queued  DOC_CREATED {event['document_id']} "
               f"({event['payload']['space']}, groups={event['payload']['allowed_groups']})")
 
+    # flush() blocks until all outstanding produce()s have their callbacks fired.
     producer.flush()
-    print(f"\nDone. Published {published} documents to '{TOPIC}'.")
+
+    if failed:
+        print(f"\nFAILED to deliver {len(failed)} of {queued} messages:")
+        for f in failed:
+            print(f"  - {f}")
+        raise SystemExit(1)
+
+    print(f"\nDelivered {delivered}/{queued} documents to '{TOPIC}'.")
     print("Restricted docs (leak-test targets): CONF-2002, CONF-3001, JIRA-905")
 
 
