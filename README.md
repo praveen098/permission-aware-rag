@@ -76,7 +76,7 @@ Built over a 10-day sprint. Day-by-day log in `docs/notes/`.
 - [x] Day 3 — end-to-end ingestion: consume → chunk → embed → write chunks
 - [x] Day 4 — live permissions: DOC_UPDATED, DOC_DELETED, ACL_CHANGED revocation
 - [x] Day 5 — hardening: revocation integration test, chunker unit tests, runbook
-- [ ] Day 6 — permission-filtered hybrid retrieval
+- [x] Day 6 — permission-aware hybrid retrieval (query service)
 - [ ] Day 7 — generation with citations + refusal handling
 - [ ] Day 8 — eval harness: quality, leak-rate, latency, cost
 - [ ] Day 9 — hardening, docs
