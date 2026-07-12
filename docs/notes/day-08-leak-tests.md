@@ -136,9 +136,3 @@ difference between test-what-you-know and test-the-property.
    - unknown-user test asserts 404 (avoids user-existence side channel)
    - opt-in --ask flag for LLM-hitting assertions (cost-explicit)
    ```
-
-## What's left
-
-- **Day 9:** README rewrite for the 90-second reviewer scan, architecture
-  diagram, one screenshot, cleanup. Optional: deploy demo URL.
-- **Day 10:** demo GIF, LinkedIn post from your pointers.

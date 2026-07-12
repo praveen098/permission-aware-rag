@@ -97,17 +97,7 @@ normalization problem between cosine similarity and ts_rank.
 4. Why key events by `document_id` instead of round-robin partitioning? What
    breaks if an ACL_CHANGED for doc X lands on a different partition than its
    DOC_CREATED?
-
-## Your tasks today
-
-1. `docker compose up -d`, confirm all four containers healthy
-   (`docker compose ps`), then `docker exec -it parag-postgres psql -U parag -c "\dt"`
-   — you should see 6 tables.
-2. Read `db/init.sql` and `schemas/doc_event.avsc` line by line against D3/D4.
-3. Answer the four questions above in your own words (send me your answers —
-   I'll pressure-test them).
-4. Commit: `git init`, first commit — suggested message below.
-
+   
 ```
 Day 1: architecture, infra, and contracts for permission-aware RAG
 
