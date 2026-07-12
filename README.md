@@ -78,7 +78,9 @@ Built over a 10-day sprint. Day-by-day log in `docs/notes/`.
 - [x] Day 5 — hardening: revocation integration test, chunker unit tests, runbook
 - [x] Day 6 — permission-aware hybrid retrieval (query service)
 - [x] Day 7 — grounded generation with citations, refusal-safe
-- [ ] Day 8 — leak-test suite: automated proof that permissions hold
+- [x] Day 8 — leak-test suite: 48 parametrized assertions proving permissions
+- [ ] Day 9 — README polish, architecture diagram, cleanup
+- [ ] Day 10 — demo GIF, LinkedIn post
 - [ ] Day 8 — eval harness: quality, leak-rate, latency, cost
 - [ ] Day 9 — hardening, docs
 - [ ] Day 10 — demo
