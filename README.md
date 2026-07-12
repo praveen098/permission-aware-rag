@@ -77,7 +77,8 @@ Built over a 10-day sprint. Day-by-day log in `docs/notes/`.
 - [x] Day 4 — live permissions: DOC_UPDATED, DOC_DELETED, ACL_CHANGED revocation
 - [x] Day 5 — hardening: revocation integration test, chunker unit tests, runbook
 - [x] Day 6 — permission-aware hybrid retrieval (query service)
-- [ ] Day 7 — generation with citations + refusal handling
+- [x] Day 7 — grounded generation with citations, refusal-safe
+- [ ] Day 8 — leak-test suite: automated proof that permissions hold
 - [ ] Day 8 — eval harness: quality, leak-rate, latency, cost
 - [ ] Day 9 — hardening, docs
 - [ ] Day 10 — demo

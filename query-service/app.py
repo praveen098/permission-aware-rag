@@ -235,3 +235,9 @@ async def search(req: SearchRequest) -> SearchResponse:
             for c in merged
         ],
     )
+
+
+# ---- /ask endpoint (defined in ask.py; registered here after all helpers are
+# available so ask.py can safely `from app import embed, hybrid_retrieve, ...`). ----
+from ask import router as _ask_router  # noqa: E402
+app.include_router(_ask_router)
